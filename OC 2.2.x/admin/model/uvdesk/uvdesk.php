@@ -226,16 +226,9 @@ class ModelUvdeskUvdesk extends Model {
 				'error' => 1,
 				'description' => 'Error, resource not found (http-code: 404)'
 				);
-			// echo "<pre>";
-		 //    echo "Error, resource not found (http-code: 404) \n";
-		 //    echo "</pre>";
 		} else {
 			curl_close($ch);
 			return json_decode($response);
-			// echo "<pre>";
-		 //    echo "Headers are " . $headers;
-		 //    echo "</pre>";
-		 //    echo "Response are " . $response;
 		}
 		curl_close($ch);
 		exit();
