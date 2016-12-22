@@ -1,0 +1,44 @@
+.uvrow {
+  margin-bottom: 20px;
+}
+.col-sm-6 .input-group-addon {
+  border-radius: 20px 0  0 20px;
+}
+#uvsearch {
+  border-radius: 0 20px 20px 0;
+}
+.uvhead {
+  height: 55px;
+}
+.viewTicket {
+  cursor: pointer;
+}
+.uvfocus {
+  background-color: #bbb;
+}
+.uvsort {
+  width: 100%;
+}
+.uvstatus {
+  width: 100%;
+}
+.uvsort a {
+  cursor: pointer;
+}
+.uvsort li {
+  position: relative;
+}
+.uvstatus a {
+  cursor: pointer;
+}
+.width-100 {
+  width: 100%;
+}
+.sortChevron {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+.dropdown .btn {
+  height: 34px;
+}

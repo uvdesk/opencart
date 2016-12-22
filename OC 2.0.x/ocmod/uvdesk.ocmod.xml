@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modification>
+    <name>UVdesk Module</name>
+    <version>1.0.0</version>
+    <code>uvdesk</code>        
+    <author>Webkul</author>
+    <link>http://webkul.com</link>
+    <file path="admin/language/english/common/menu.php">
+        <operation>
+            <search><![CDATA[
+            // Text
+            ]]></search>
+            <add position="after"><![CDATA[
+/**
+ * UVdesk module
+ */
+$_['text_uvdesk']               = 'UVdesk';
+/**
+ * Ends here
+ */
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/controller/common/menu.php">
+        <operation>
+            <search><![CDATA[
+            return $this->load->view('common/menu.tpl', $data)
+            ]]></search>
+            <add position="before"><![CDATA[
+/**
+ * UVdesk extension
+ */
+        $data['text_uvdesk'] = $this->language->get('text_uvdesk');
+        $data['uvdesk'] = $this->url->link('uvdesk/uvdesk', 'token=' . $this->session->data['token'], true);
+        $data['uvdesk_status'] = $this->config->get('uvdesk_status');
+/**
+ * ends here
+ */
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/view/template/common/menu.tpl">
+        <operation>
+            <search><![CDATA[
+            <li id="catalog">
+            ]]></search>
+            <add position="before"><![CDATA[
+<!-- webkul uvdesk module -->
+  <?php if ($uvdesk_status) { ?>
+  <li id="uvdesk"><a href="<?php echo $uvdesk; ?>"><i class="fa fa-ticket"></i> <span><?php echo $text_uvdesk; ?></span></a></li>
+  <?php } ?>
+<!-- ends here -->
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="system/library/customer.php">
+        <operation>
+            <search><![CDATA[
+            login($email, $password, $override = false) {
+            ]]></search>
+            <add position="after"><![CDATA[
+        /**
+         * unsetting uvdesk customer
+         */
+        unset($this->session->data['uvdesk_customer_id']);
+        /**
+         * ends here
+         */
+            ]]></add>
+        </operation>
+    </file>
+</modification>

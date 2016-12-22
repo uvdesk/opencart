@@ -1,0 +1,128 @@
+.thread {
+  display: inline-block;
+  width: 100%;
+}
+.thread-created-info {
+  margin-bottom: 20px;
+}
+.round-tabs {
+  float: left;
+  margin-top: 5px
+}
+.round-tabs img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.cust-name {
+  float: left;
+  margin: 5px;
+}
+.thread-actions .fa {
+  background-color: #ddd;
+  padding: 4px;
+  border-radius: 4px;
+}
+.reply {
+  padding: 10px 20px;
+  border: 1px solid #37bc9b;
+  margin: 35px 0 10px 30px;
+  border-radius: 4px;
+}
+.main-reply {
+  color: #222;
+  word-wrap: break-word;
+}
+#button-load {
+  background-color: #3c5794;
+  border-radius: 20px;
+  font-weight: bold;
+}
+.col-sm-3 .panel-body {
+  padding-left: 25px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.8;
+}
+#ticket-detail {
+  border: 1px solid #ddd;
+  margin: 20px 0;
+  padding: 10px;
+  min-height: 50px;
+  border-radius: 4px;
+}
+.loader-border {
+  background-color: rgb(0, 0, 0);
+  width: 100%;
+  float: left;
+  border-bottom: 1px solid #3c5794;
+  margin-top: -15px;
+}
+.btn:focus {
+  outline: none;
+}
+.download-attachment {
+  border: 1px solid rgb(170, 170, 170);
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  margin: 2px;
+  display: inline-block;
+}
+#addFile {
+  color: #325896;
+  font-weight: bold;
+  margin-left: 15px;
+  cursor: pointer;
+}
+.page-header .pull-right {
+  margin-right: 10px;
+  font-size: 15px;
+  margin-bottom: 0;
+  padding: 5px;
+}
+.name {
+  vertical-align: middle;
+  padding-top: 15px;
+  margin-left: 5px;
+}
+.container-fluid .col-sm-3 {
+  padding: 0 20px;
+}
+.container-fluid .col-sm-9 {
+  font-size: 15px;
+}
+#moreLabel {
+  cursor: pointer;
+}
+.showLabel {
+  display: none;
+}
+.userName {
+  margin-left: 5px;
+  font-weight: bold;
+}
+.expand-div {
+  width: 100%;
+  margin-bottom: 15px;
+}
+form .reply {
+  padding: 0;
+}
+.attachment-div {
+  display: inline-block;
+  margin: 3px;
+}
+.attachment-div input {
+  display: none;
+}
+.upload-attachment span {
+  position: absolute;
+  margin: -14px 0 0 4px;
+}
+.border-none {
+  border: none;
+}
+.attachments {
+  padding: 5px 30px;
+}

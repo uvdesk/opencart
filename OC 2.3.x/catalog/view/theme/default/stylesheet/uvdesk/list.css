@@ -1,0 +1,50 @@
+.viewTicket {
+  font-size: 14px;
+}
+.uvfocus {
+  background-color: #bbb;
+}
+.uvsort {
+  width: 100%;
+}
+.uvstatus {
+  width: 100%;
+}
+.uvsort a {
+  cursor: pointer;
+}
+.uvsort li {
+  position: relative;
+}
+.uvstatus a {
+  cursor: pointer;
+}
+.width-100 {
+  width: 100%;
+}
+.sortChevron {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+.viewTicket a {
+  color: #666;
+}
+thead td {
+  font-weight: bold;
+}
+.dropdown .btn {
+  height: 34px;
+}
+.panel-heading {
+  height: 55px;
+}
+#content .row {
+  margin-bottom: 20px;
+}
+.col-sm-6 .input-group-addon {
+  border-radius: 20px 0  0 20px;
+}
+#uvsearch {
+  border-radius: 0 20px 20px 0;
+}
