@@ -26,9 +26,9 @@ Manual Installation:
 This is an open source project. If you'd like to contribute
  - Fork it.
  - Add your branch using 
->  git checkout -b your-branch 
+    ``` git checkout -b your-branch ```
  - Add your changes and commit
- > git commit -m "your changes"
+    ``` git commit -m "your changes ```
  - Push to your branch
- > git push -u origin your-branch
+    ``` git push -u origin your-branch ```
  - Create new pull request.
