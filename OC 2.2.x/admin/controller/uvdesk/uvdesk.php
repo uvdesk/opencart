@@ -140,11 +140,13 @@ class ControllerUvdeskUvdesk extends Controller {
 
 		$tickets = $this->model_uvdesk_uvdesk->getTickets($filter_data);
 
-		if (isset($tickets->error)) {
+		if (isset($tickets->error) || !$tickets) {
 			if (isset($tickets->error_description)) {
 				$data['error'] = $tickets->error_description;
 			} elseif (isset($tickets->description)) {
 				$data['error'] = $tickets->description;
+			} else {
+				$data['error'] = $this->language->get('error_uvdesk');
 			}
 
 			$data['header'] = $this->load->controller('common/header');

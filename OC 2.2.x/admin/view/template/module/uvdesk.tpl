@@ -48,7 +48,10 @@
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-company-domain"><span data-toggle="tooltip" title="<?php echo $help_company_domain; ?>"><?php echo $entry_company_domain; ?></label>
             <div class="col-sm-10">
-              <input type="text" name="uvdesk_company_domain" id="input-company-domain" class="form-control" value="<?php echo $uvdesk_company_domain; ?>" placeholder="<?php echo $entry_company_domain; ?>">
+              <div class="input-group">
+                <input type="text" name="uvdesk_company_domain" id="input-company-domain" class="form-control" value="<?php echo $uvdesk_company_domain; ?>" placeholder="<?php echo $entry_company_domain; ?>">
+                <span class="input-group-addon">.uvdesk.com</span>
+              </div>
             </div>
           </div>
         </form>

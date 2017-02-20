@@ -60,3 +60,4 @@ $_['help_mailbox']     = 'Enter Mailbox';
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify webkul uvdesk module!';
+$_['error_uvdesk']     = 'Warning: There is some error while getting response from the UVdesk';

@@ -100,40 +100,12 @@ class ModelUvdeskUvdesk extends Model {
 		return $ticket;
 	}
 
-	// public function getGroups($name) {
-	// 	$url = 'groups.json?search=' . $name;
-
-	// 	$ticket = $this->callApi($url);
-	// 	return $ticket;
-	// }
-
-	// public function getSubgroups($name) {
-	// 	$url = 'sub-groups.json?search=' . $name;
-
-	// 	$ticket = $this->callApi($url);
-	// 	return $ticket;
-	// }
-
-	// public function getTypes($name) {
-	// 	$url = 'ticket-types.json?search=' . $name;
-
-	// 	$ticket = $this->callApi($url);
-	// 	return $ticket;
-	// }
-
 	public function getTags($name) {
 		$url = 'tags.json?search=' . $name;
 
 		$ticket = $this->callApi($url);
 		return $ticket;
 	}
-
-	// public function getMailboxes($name) {
-	// 	$url = 'mailboxes.json?search=' . $name;
-
-	// 	$ticket = $this->callApi($url);
-	// 	return $ticket;
-	// }
 
 	public function getThreads($ticket_id, $page) {
 		$url = 'ticket/' . $ticket_id . '/threads.json';
@@ -170,19 +142,11 @@ class ModelUvdeskUvdesk extends Model {
 				$data .= 'Content-Disposition: form-data; name="attachments[]"; filename="' . $fileName . '"' . $lineEnd;
 				$data .= "Content-Type: $fileType" . $lineEnd . $lineEnd;
 				$data .= file_get_contents($fileTmpName) . $lineEnd;
-				$data .= '--' . $mime_boundary . $lineEnd;				
+				$data .= '--' . $mime_boundary . $lineEnd;
 			}
 		}
 
 		$data .= "--" . $mime_boundary . "--" . $lineEnd . $lineEnd;
-
-		// $data = array(
-		// 	'threadType' => 'reply',
-		// 	'reply'      => $reply,
-		// 	'status'     => 1,
-		// 	// 'actAsType'  => 'customer',
-		// 	// 'actAsEmail' => $this->customer->getEmail()
-		// 	);
 
 		$response = $this->postApi($url, $data, 'POST', $mime_boundary);
 		return $response;
@@ -207,11 +171,12 @@ class ModelUvdeskUvdesk extends Model {
 		$access_token = $this->config->get('uvdesk_access_token');
 		$ch = curl_init($url);
 		$headers = array(
-		    'Authorization: Bearer ' . $access_token,
+			'Authorization: Bearer ' . $access_token,
 		);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch, CURLOPT_HEADER, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		$output = curl_exec($ch);
 		$info = curl_getinfo($ch);
 		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
@@ -219,23 +184,16 @@ class ModelUvdeskUvdesk extends Model {
 		$response = substr($output, $header_size);
 
 		if($info['http_code'] == 200) {
-		    return json_decode($response);
+			return json_decode($response);
 		} else if($info['http_code'] == 404) {
 			curl_close($ch);
 			return array(
 				'error' => 1,
 				'description' => 'Error, resource not found (http-code: 404)'
 				);
-			// echo "<pre>";
-		 //    echo "Error, resource not found (http-code: 404) \n";
-		 //    echo "</pre>";
 		} else {
 			curl_close($ch);
 			return json_decode($response);
-			// echo "<pre>";
-		 //    echo "Headers are " . $headers;
-		 //    echo "</pre>";
-		 //    echo "Response are " . $response;
 		}
 		curl_close($ch);
 		exit();
@@ -271,6 +229,7 @@ class ModelUvdeskUvdesk extends Model {
 		curl_setopt($ch, CURLOPT_HEADER, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		if ($custom) {
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $custom);
 		}
@@ -283,18 +242,16 @@ class ModelUvdeskUvdesk extends Model {
 
 		if($info['http_code'] == 200 || $info['http_code'] == 201) {
 			curl_close($ch);
-		    return json_decode($response);
+			return json_decode($response);
 		} elseif($info['http_code'] == 400) {
 			curl_close($ch);
-		    return json_decode($response);
-		    echo "Error, request data not valid. (http-code: 400) \n";
-		    echo "Response :".$response." \n";
+			return json_decode($response);
 		} elseif($info['http_code'] == 404) {
-		    echo "Error, resource not found (http-code: 404) \n";
-		} else {		    
-		    echo "Error, HTTP Status Code : " . $info['http_code'] . "\n";
-		    echo "Headers are ".$headers;
-		    echo "Response are ".$response;
+			echo "Error, resource not found (http-code: 404) \n";
+		} else {
+			echo "Error, HTTP Status Code : " . $info['http_code'] . "\n";
+			echo "Headers are ".$headers;
+			echo "Response are ".$response;
 		}
 		curl_close($ch);
 		exit();
