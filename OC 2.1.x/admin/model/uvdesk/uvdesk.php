@@ -2,7 +2,7 @@
 class ModelUvdeskUvdesk extends Model {
 
 	public function getTickets($data = array()) {
-		// Return tickets 
+		// Return tickets
 		$url = 'tickets.json?';
 
 		$url .= 'page=' . $data['page'];
@@ -132,17 +132,19 @@ class ModelUvdeskUvdesk extends Model {
 		$data .= '--' . $mime_boundary . $lineEnd;
 
 		// attachements
-		
+
 		if (isset($this->request->files['attachment']) && $this->request->files['attachment']) {
 			foreach ($this->request->files['attachment']['name'] as $key => $file) {
-				$fileType = $this->request->files['attachment']['type'][$key];
-				$fileName = $this->request->files['attachment']['name'][$key];
-				$fileTmpName = $this->request->files['attachment']['tmp_name'][$key];
+				if ($file) {
+					$fileType = $this->request->files['attachment']['type'][$key];
+					$fileName = $this->request->files['attachment']['name'][$key];
+					$fileTmpName = $this->request->files['attachment']['tmp_name'][$key];
 
-				$data .= 'Content-Disposition: form-data; name="attachments[]"; filename="' . $fileName . '"' . $lineEnd;
-				$data .= "Content-Type: $fileType" . $lineEnd . $lineEnd;
-				$data .= file_get_contents($fileTmpName) . $lineEnd;
-				$data .= '--' . $mime_boundary . $lineEnd;
+					$data .= 'Content-Disposition: form-data; name="attachments[]"; filename="' . $fileName . '"' . $lineEnd;
+					$data .= "Content-Type: $fileType" . $lineEnd . $lineEnd;
+					$data .= file_get_contents($fileTmpName) . $lineEnd;
+					$data .= '--' . $mime_boundary . $lineEnd;
+				}
 			}
 		}
 
@@ -201,7 +203,7 @@ class ModelUvdeskUvdesk extends Model {
 
 	protected function postApi($added_url = '', $data, $custom = '', $mime_boundary = '') {
 		$access_token = $this->config->get('uvdesk_access_token');
-		// ticket url 
+		// ticket url
 		$company_domain = $this->config->get('uvdesk_company_domain');
 		$url = 'https://' . $company_domain . '.uvdesk.com/en/api/';
 		$url .= $added_url;

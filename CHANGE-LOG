@@ -23,3 +23,9 @@ VERSION 1.1.1.1
 -------------------------------------------------
 * resolve the error on putting wrong domain or access token
 -------------------------------------------------
+
+VERSION 1.1.1.2
+
+-------------------------------------------------
+* Resolved an issue on sending replies without attachments
+-------------------------------------------------

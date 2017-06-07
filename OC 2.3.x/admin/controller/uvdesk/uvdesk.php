@@ -375,11 +375,13 @@ class ControllerUvdeskUvdesk extends Controller {
 		if (isset($this->request->get['id']) && $this->request->get['id']) {
 			$data['id'] = $ticket_id = $this->request->get['id'];
 			$data['ticket'] = $ticket = $this->model_uvdesk_uvdesk->getTicket($ticket_id);
-			if (isset($ticket->error)) {
+			if (isset($ticket->error) || !$ticket) {
 				if (isset($ticket->error_description)) {
 					$data['error'] = $ticket->error_description;
 				} elseif (isset($ticket->description)) {
 					$data['error'] = $ticket->description;
+				} else {
+					$data['error'] = $this->language->get('error_uvdesk');
 				}
 
 				$data['header'] = $this->load->controller('common/header');
@@ -463,7 +465,7 @@ class ControllerUvdeskUvdesk extends Controller {
 		if (isset($this->request->post['reply']) && $this->request->post['reply']) {
 			$ticket_id = $this->request->post['ticket_id'];
 			$reply = $this->model_uvdesk_uvdesk->addThread($ticket_id, html_entity_decode($this->request->post['reply']));
-			
+
 			if (isset($reply->message)) {
 				$this->session->data['success'] = $reply->message;
 			} else {
