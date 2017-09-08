@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modification>
+    <name>UVdesk Module</name>
+    <version>1.0.0</version>
+    <code>uvdesk</code>
+    <author>Webkul</author>
+    <link>http://webkul.com</link>
+    <file path="admin/language/en-gb/common/column_left.php">
+        <operation>
+          <search><![CDATA[
+        $_['text_other_status']
+          ]]></search>
+          <add position="after"><![CDATA[
+/**
+ * UVdesk module
+ */
+$_['text_uvdesk']               = 'UVdesk';
+/**
+ * Ends here
+ */
+          ]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/controller/common/column_left.php">
+        <operation>
+            <search><![CDATA[
+            // Catalog
+            ]]></search>
+            <add position="before"><![CDATA[
+            /**
+             * UVdesk module
+             */
+            if ($this->config->get('module_uvdesk_status')) {
+                $data['menus'][] = array(
+                  'id'       => 'menu-uvdesk',
+                  'icon'     => 'fa-ticket',
+                  'name'     => $this->language->get('text_uvdesk'),
+                  'href'     => $this->url->link('uvdesk/uvdesk', 'user_token=' . $this->session->data['user_token'], true),
+                  'children' => array()
+                );
+            }
+            /**
+             * Ends here
+             */
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="system/library/cart/customer.php">
+        <operation>
+            <search><![CDATA[
+            login($email, $password, $override = false) {
+            ]]></search>
+            <add position="after"><![CDATA[
+        /**
+         * unsetting uvdesk customer
+         */
+        unset($this->session->data['uvdesk_customer_id']);
+        /**
+         * ends here
+         */
+            ]]></add>
+        </operation>
+    </file>
+</modification>

@@ -1,0 +1,112 @@
+{{ header }}
+<div class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  {% if success %}
+  <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}</div>
+  {% endif %}
+  {% if error_warning %}
+  <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+  {% endif %}
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <div class="col-sm-8">
+        <div class="panel panel-default">
+          <h2>{{ text_create }}</h2>
+          <div class="panel-body">
+            <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal">
+              {% if not isCustomer %}
+              <div class="form-group required">
+                <label for="input-name" class="col-sm-12 control-label">{{ entry_name }}</label>
+                <div class="col-sm-12">
+                  <input type="text" name="name" class="form-control" placeholder="{{ entry_enter ~ entry_name }}">
+                  {% if error_name %}
+                  <div class="text-danger">{{ error_name }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="form-group required">
+                <label for="input-email" class="col-sm-12 control-label">{{ entry_email }}</label>
+                <div class="col-sm-12">
+                  <input type="text" name="email" class="form-control" placeholder="{{ entry_enter ~ entry_email }}">
+                  {% if error_email %}
+                  <div class="text-danger">{{ error_email }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              {% endif %}
+              <div class="form-group required">
+                <label for="input-type" class="col-sm-12 control-label">{{ entry_type }}</label>
+                <div class="col-sm-12">
+                  <select name="type" class="form-control">
+                    {% if types %}
+                    {% for typ in types %}
+                    {% if type == typ.value %}
+                    <option value="{{ typ.value }}" selected>{{ typ.name }}</option>
+                    {% else %}
+                    <option value="{{ typ.value }}">{{ typ.name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                  </select>
+                  {% if error_type %}
+                  <div class="text-danger">{{ error_type }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="form-group required">
+                <label for="input-subject" class="col-sm-12 control-label">{{ entry_subject }}</label>
+                <div class="col-sm-12">
+                  <input type="text" name="subject" class="form-control" placeholder="{{ entry_enter ~ entry_subject }}" value="{{ subject }}">
+                  {% if error_subject %}
+                  <div class="text-danger">{{ error_subject }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="form-group required">
+                <label for="input-message" class="col-sm-12 control-label">{{ entry_message }}</label>
+                <div class="col-sm-12">
+                  <textarea name="message" class="form-control" placeholder="{{ help_message }}">{{ message }}</textarea>
+                  {% if error_message %}
+                  <div class="text-danger">{{ error_message }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <input type="submit" class="btn btn-primary" value="{{ button_create }}">
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <p>
+              <span class="badge"><i class="fa fa-info"></i></span>
+              <label class="information-block-title"><span class="Apple-converted-space">&nbsp;</span>Help and Information</label>
+              <br>
+            </p>
+            <div class="information-item">
+              <label>Ticket</label>
+              <p>A ticket is the support request submitted by the customers to inquire about their problems.</p>
+            </div>
+            <div class="information-item">
+              <label>Ticket creation</label>
+              <p>The moment when the users enter their basic details, they get registered with UVdesk services and confirmation mail regarding the account activation is sent to their ID’s. They have to click on the link provided for setting the password.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+<link href="catalog/view/theme/default/stylesheet/uvdesk/form.css" rel="stylesheet" type="text/css" />
+{{ footer }}

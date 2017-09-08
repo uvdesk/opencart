@@ -1,0 +1,335 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+      {% if ticket.userDetails is defined %}
+      <div class="alert alert-info pull-right">
+        <span class="round-tabs">
+          <img class="border" src="{{ ticket.userDetails.pic }}">
+        </span>
+        <span class="name">
+        {{ ticket.userDetails.name }}
+        </span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if success %}
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}</div>
+    {% endif %}
+    {% if warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> {{ warning }}</div>
+    {% endif %}
+    <div class="col-sm-3">
+      <div class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">{{ text_labels }}</h3></div>
+        <div class="panel-body">
+          {% if predefined_labels is defined %}
+          {% for key, value in predefined_labels %}
+          <a href="{{ label_url ~ key }}" style="{% if label_active == key %}font-weight: 800; color: #333{% else %}color: #555{% endif %};">{{ key|capitalize }} <span class="label label-success">{{ value }}</span></a><br>
+          {% endfor %}
+          {% endif %}
+          {% if custom_labels is defined and custom_labels %}
+          <span id="moreLabel">{{ text_more }} <span class="caret"></span></span><br>
+          <div class="showLabel">
+            {% for value in custom_labels %}
+            <a href="{{ custom_label_url ~ value.id }}" style="{% if custom_label_active == value.id %}font-weight: 800; color: #333{% else %}color: #555{% endif %};">{{ value.name|capitalize }} <span class="label label-success" style="background-color: {{ value.color }};">{{ value.count }}</span></a><br>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default col-sm-9">
+      <div id="ticket-detail">
+        <h3 class="pull-left">
+          #
+          {% if ticket.ticket.incrementId is defined %}
+            {{ ticket.ticket.incrementId }}
+          {% endif %}
+          {% if ticket.ticket.subject is defined %}
+            {{ ticket.ticket.subject }}
+          {% endif %}
+        </h3>
+        <div style="clear: both;">
+          {% if ticket.ticket.status.id is defined %}
+          <span class="label label-info" title="Status" data-toggle="tooltip">{{ ticket.ticket.status.name }}</span>
+          {% endif %}
+          {% if ticket.ticket.priority.id is defined %}
+          <span class="label label-warning" title="Priority" data-toggle="tooltip">{{ ticket.ticket.priority.name }}</span>
+          {% endif %}
+          {% if ticket.ticket.type.id is defined %}
+          <span class="label label-info" title="Type" data-toggle="tooltip">{{ ticket.ticket.type.name }}</span>
+          {% endif %}
+          <span class="label label-info" title="Threads" data-toggle="tooltip">{{ ticket.ticketTotalThreads }}</span>
+          <span class="label label-success" title="Agent" data-toggle="tooltip"><i class="fa fa-user"></i></span>
+          <span>
+            {% if ticket.ticket.agent.detail.agent.id is defined %}
+            {{ ticket.ticket.agent.detail.agent.firstName }}
+            {% else %}
+            {{ '' }}
+            {% endif %}
+          </span>
+        </div>
+      </div>
+      <div class="thread">
+        <div class="col-sm-12 thread-created-info text-center">
+          <span class="info">
+            {% if ticket.ticket.customer.detail.customer.id is defined %}
+            {% set customer_name = ticket.ticket.customer.detail.customer.name %}
+            {% set customer_email = ticket.ticket.customer.email %}
+            {{ customer_name }}
+            {% else %}
+            {% set customer_name = '' %}
+            {% set customer_email = '' %}
+            {% endif %}
+            {{ text_created }}
+          </span>
+          <span class="text-right date pull-right">
+            {% if ticket.ticket.formatedCreatedAt is defined %}
+              {{ ticket.ticket.formatedCreatedAt }}
+            {% endif %}
+          </span>
+        </div>
+        <div class="col-sm-12">
+          <div class="pull-left">
+            <span class="round-tabs">
+            <img src="{% if ticket.ticket.customer.profileImage is defined and ticket.ticket.customer.profileImage %}{{ ticket.ticket.customer.profileImage }}{% else %}https://cdn.uvdesk.com/uvdesk/images/d94332c.png{% endif %}">
+            </span>
+          </div>
+          <div class="thread-info">
+            <div class="thread-info-row first">
+              <span class="cust-name">
+                <strong>{{ customer_name }} ( {{ customer_email }} ) </strong>
+              </span>
+            </div>
+            <div class="thread-info-row">
+            </div>
+          </div>
+          <div class="thread-body">
+            <div class="reply border-none">
+              <div class="main-reply">
+                {% if ticket.createThread.reply is defined %}
+                  {{ ticket.createThread.reply }}
+                {% endif %}
+              </div>
+              {% if ticket.createThread.attachments is defined and ticket.createThread.attachments %}
+                {% for attachment in ticket.createThread.attachments %}
+                  <a href="{{ attachment_url ~ attachment.id }}" target="_blank" class="download-attachment"><i class="fa fa-download"></i></a>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center expand-div">
+        <button class="btn btn-primary" id="button-load">{{ text_expand_more }}</button>
+        <span class="loader-border"></span>
+      </div>
+
+      <div class="ticket-thread">
+      </div>
+      <hr>
+      <div class="col-sm-12">
+        <div class="pull-left">
+          <span class="round-tabs">
+            {% if ticket.userDetails.pic is defined and ticket.userDetails.pic %}
+            <img src="{{ ticket.userDetails.pic }}">
+            {% else %}
+            <img src="https://cdn.uvdesk.com/uvdesk/images/d94332c.png">
+            {% endif %}
+          </span>
+        </div>
+        <span class="userName">{{ ticket.userDetails.name }}</span>
+        <div class="thread-body">
+          <div class="thread-info">
+            <form action="{{ add_reply }}" method="post" enctype="multipart/form-data">
+              <div class="reply border-none">
+                <textarea data-toggle="summernote" name="reply"></textarea>
+                <input type="hidden" name="ticket_id" value="{{ thread_id }}">
+                <input type="hidden" name="id" value="{{ id }}">
+                <div class="attachment-div">
+                  <span class="download-attachment upload-attachment"><i class="fa fa-upload"></i><span onclick="$(this).parent().parent().remove();">&times;</span></span>
+                  <input type="file" name="attachment[]" class="fileUpload" onchange="fileupload(this);">
+                </div>
+                <span id="addFile">+ {{ text_attach_file }}</span>
+                <br><br>
+                <input type="submit" class="btn btn-success" value="Reply">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="view/javascript/summernote/summernote.js"></script>
+<link href="view/javascript/summernote/summernote.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
+<script type="text/javascript">
+  var current_page = 0;
+  var last_page = 0;
+  var inprocess = 0, scrollDown = 1;
+
+  $('#moreLabel').on('click', function () {
+    $('.showLabel').slideToggle();
+  });
+
+  function loadThreads() {
+    var next_page = parseInt(current_page) + 1;
+
+    $.ajax({
+      url: 'index.php?route=uvdesk/uvdesk/getThreads&user_token={{ user_token }}',
+      dataType: 'json',
+      type: 'post',
+      data: {id: '{% if thread_id is defined %}{{ thread_id }}{% endif %}', page: next_page},
+      beforeSend: function () {
+        $('#button-load').html('<i class="fa fa-spin fa-spinner"></i>');
+        $('#button-load').addClass('disabled');
+        inprocess = 1;
+      },
+      success: function (json) {
+        var threads = '';
+        if (json['threads']) {
+          var jsonThreads = json['threads'];
+          for (var i = 0; i < jsonThreads.length; i++) {
+            var threads = '';
+            threads += '<div class="thread">';
+            threads += '  <div class="col-sm-12 thread-created-info text-center">';
+            threads += '    <span class="info">';
+            threads += '      <span id="thread' + jsonThreads[i]['thread_id'] + '" class="copy-thread-link">#' + jsonThreads[i]['thread_id'] + '</span>';
+            threads += '      ' + jsonThreads[i]['name'];
+            threads += '      {{ text_replied }}';
+            threads += '    </span>';
+            threads += '    <span class="text-right date pull-right">';
+            threads += jsonThreads[i]['date_added'];
+            threads += '    </span>';
+            threads += '  </div>';
+            threads += '  <div class="col-sm-12">';
+            threads += '    <div class="pull-left">';
+            threads += '      <span class="round-tabs">';
+            threads += '        <img src="' + jsonThreads[i]['thumbnail'] + '">';
+            threads += '      </span>';
+            threads += '    </div>';
+            threads += '    <div class="thread-body">';
+            threads += '      <div class="thread-info">';
+            threads += '        <div class="thread-info-row first">';
+            threads += '          <span class="cust-name">  ';
+            threads += '            <strong>' + jsonThreads[i]['name'] + '</strong>';
+            threads += '          </span>';
+            threads += '          <label class="user-type customer label label-info">';
+            threads += jsonThreads[i]['user_type'];
+            threads += '          </label>';
+            // threads += '          <div class="thread-actions pull-right">';
+            // threads += '            <i class="fa fa-star" data-toggle="tooltip" data-placement="top" data-original-title="Bookmark"></i>';
+            // threads += '            <i class="fa fa-share" data-toggle="tooltip" data-placement="top" data-original-title="Forward"></i>';
+            // threads += '            <i class="fa fa-lock" data-toggle="tooltip" data-placement="top" data-original-title="Lock"></i>';
+            // threads += '            <i class="fa fa-tasks" data-toggle="tooltip" data-placement="top" data-original-title="Mark for Task"></i>';
+            // threads += '            <i class="fa fa-pencil" data-toggle="tooltip" data-placement="top" data-original-title="Edit"></i>';
+            // threads += '            <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="Delete"></i>';
+            // threads += '          </div>';
+            threads += '        </div>';
+            threads += '        <div class="thread-info-row">';
+            threads += '        </div>';
+            threads += '      </div>';
+            threads += '      <div class="reply">';
+            threads += '        <div class="main-reply">';
+            threads += '          ' + jsonThreads[i]['reply'];
+            threads += '        </div>';
+            threads += '      </div>';
+            var attachment_length = Object.keys(jsonThreads[i]['attachments']).length;
+            if (attachment_length) {
+              threads += '<div class="attachments">';
+              for (var j = 0; j < attachment_length; j++) {
+                threads += '<a href="{{ attachment_url }}' + jsonThreads[i]['attachments'][j]['id'] + '" target="_blank" class="download-attachment"><i class="fa fa-download"></i></a>';
+              }
+              threads += '</div>';
+            }
+            threads += '    </div>';
+            threads += '  </div>';
+            threads += '</div>';
+            threads += '<hr>';
+            $('.ticket-thread').prepend(threads);
+          }
+        }
+        current_page = json['current_page'];
+        last_page = json['last_page']
+
+        if (current_page == last_page) {
+          $('#button-load').text('{{ text_all_expand }}');
+        } else {
+          var threads_left = json['total'] - (10 * current_page);
+          $('#button-load').text('{{ text_expand }} ' + threads_left + ' {{ text_more }}');
+        }
+        inprocess = 0;
+        if (scrollDown) {
+          var docheight = ($(document).height() - $(window).height() - 230);
+          $('html, body').animate({ scrollTop: docheight }, 'slow');
+          scrollDown = 0;
+        }
+      },
+      complete: function () {
+        $('#button-load').removeClass('disabled');
+      },
+      error: function () {
+
+      }
+    });
+  }
+
+  $('#button-load').on('click', function () {
+    if (!inprocess && last_page > current_page) {
+      loadThreads();
+    }
+  })
+
+  loadThreads();
+
+  $('body').on('click', '.upload-attachment', function () {
+    var child = $(this).next('.fileUpload');
+    child.trigger('click');
+  });
+
+  function fileupload(thisthis) {
+    var size = thisthis.files[0].size/1000;
+    var limit = 1;
+    var max = 10;
+    var maxsize = {{ size }};
+    // var allowed_extensions = <?php echo json_encode($extensions);?>;
+    if(thisthis.type == 'file') {
+      fileName = thisthis.value;
+      var file_extension = fileName.split('.').pop();
+      // for(var i = 0; i <= allowed_extensions.length && limit <= max; i++) {
+        if(size < maxsize) {
+          var getImagePath = URL.createObjectURL(thisthis.files[0]);
+          $(thisthis).prev().css('background-image', 'url(' + getImagePath + ')');
+          $(thisthis).prev().css('background-size', 'cover');
+          // $(thisthis).prev().append('<span class="ex">' + file_extension + '</span>');
+          limit++;
+          return true;
+        }
+      // }
+    }
+    if(limit > max)
+      alert('Maximum Number of file is ' + max);
+    else
+      alert("Invalid file type or size");
+      thisthis.value = "";
+      return false;
+  };
+
+  $('#addFile').on('click', function () {
+    var attach = '<div class="attachment-div"><span class="download-attachment upload-attachment"><i class="fa fa-upload"></i><span onclick="$(this).parent().parent().remove();">&times;</span></span><input type="file" name="attachment[]" class="fileUpload" onchange="fileupload(this);"></div>';
+    $(this).before(attach);
+  });
+
+</script>
+{{ footer }}
