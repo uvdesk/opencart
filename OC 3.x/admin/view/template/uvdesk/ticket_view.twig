@@ -68,6 +68,12 @@
           {% if ticket.ticket.type.id is defined %}
           <span class="label label-info" title="Type" data-toggle="tooltip">{{ ticket.ticket.type.name }}</span>
           {% endif %}
+          {% if ticket.ticket.subgroup.id is defined %}
+            <span class="label label-info" title="Team" data-toggle="tooltip">{{ ticket.ticket.subgroup.name }}</span>
+          {% endif %}
+          {% if ticket.ticket.group.id is defined %}
+            <span class="label label-info" title="Group" data-toggle="tooltip">{{ ticket.ticket.group.name }}</span>
+          {% endif %}
           <span class="label label-info" title="Threads" data-toggle="tooltip">{{ ticket.ticketTotalThreads }}</span>
           <span class="label label-success" title="Agent" data-toggle="tooltip"><i class="fa fa-user"></i></span>
           <span>

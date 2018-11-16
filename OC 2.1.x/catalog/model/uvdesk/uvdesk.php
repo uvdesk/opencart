@@ -149,6 +149,7 @@ class ModelUvdeskUvdesk extends Model {
 		}
 
 		$data .= "--" . $mime_boundary . "--" . $lineEnd . $lineEnd;
+		$data  .= $this->session->data['language'];
 
 		$response = $this->postApi($url, $data, 'POST', $mime_boundary);
 		return $response;
@@ -177,6 +178,7 @@ class ModelUvdeskUvdesk extends Model {
 	}
 
 	public function createTicket($data) {
+		$domain = ($this->request->server['HTTP_HOST'].(str_replace("/index.php","/", $this->request->server['PHP_SELF'])));
 		$url = 'tickets.json';
 
 		$data = array(
@@ -184,7 +186,10 @@ class ModelUvdeskUvdesk extends Model {
 			'from'    => $data['email'],
 			'subject' => $data['subject'],
 			'reply'   => $data['message'],
-			'type'    => $data['type']
+			'type'    => $data['type'],
+			'locale'  => $this->session->data['language'],
+			'domain'	=> $domain,
+			'token'   => $this->config->get('uvdesk_access_token'),
 			);
 
 		$ticket = $this->postApi($url, $data, 'POST');

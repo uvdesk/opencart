@@ -237,6 +237,14 @@ class ControllerUvdeskUvdesk extends Controller {
 
 		$data['mailboxes'] = json_encode($mailboxes);
 
+		$tags = array();
+
+		$data['tags'] = json_encode($this->model_uvdesk_uvdesk->getTags($name = '')->tags);
+
+		$customers = array();
+
+		$data['customers'] = json_encode($this->model_uvdesk_uvdesk->getCustomers($name = '')->customers);
+
 		$results = $tickets->tickets;
 
 		foreach ($results as $result) {
@@ -534,7 +542,7 @@ class ControllerUvdeskUvdesk extends Controller {
 
 			$data = array();
 
-			$name = $this->request->get['search'];
+			$name = strtolower($this->request->get['search']);
 
 			$type = $this->request->post['type'];
 
@@ -801,6 +809,38 @@ class ControllerUvdeskUvdesk extends Controller {
 
 		if (isset($this->request->get['search'])) {
 			$url .= '&search=' . $this->request->get['search'];
+		}
+
+		if (isset($this->request->get['agent'])) {
+			$url .= '&agent=' . $this->request->get['agent'];
+		}
+
+		if (isset($this->request->get['customer'])) {
+			$url .= '&customer=' . $this->request->get['customer'];
+		}
+
+		if (isset($this->request->get['group'])) {
+			$url .= '&group=' . $this->request->get['group'];
+		}
+
+		if (isset($this->request->get['team'])) {
+			$url .= '&team=' . $this->request->get['team'];
+		}
+
+		if (isset($this->request->get['priority'])) {
+			$url .= '&priority=' . $this->request->get['priority'];
+		}
+
+		if (isset($this->request->get['type'])) {
+			$url .= '&type=' . $this->request->get['type'];
+		}
+
+		if (isset($this->request->get['tag'])) {
+			$url .= '&tag=' . $this->request->get['tag'];
+		}
+
+		if (isset($this->request->get['mailbox'])) {
+			$url .= '&mailbox=' . $this->request->get['mailbox'];
 		}
 
 		$data['tab_active'] = $tab;

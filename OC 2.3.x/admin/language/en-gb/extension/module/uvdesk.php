@@ -17,3 +17,4 @@ $_['help_company_domain'] = 'Specify your company\'s Domain Name. e.g. \'webkul\
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify webkul uvdesk module!';
+$_['error_warning']          = 'Warning: Please fill all the required values!';

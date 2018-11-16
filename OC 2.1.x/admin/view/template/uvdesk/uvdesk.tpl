@@ -175,6 +175,8 @@
     localStorage.uvdesk_priorities = '<?php echo $priorities; ?>';
     localStorage.uvdesk_types = '<?php echo $types; ?>';
     localStorage.uvdesk_mailboxes = '<?php echo $mailboxes; ?>';
+    localStorage.uvdesk_tags = '<?php echo $tags; ?>';
+    localStorage.uvdesk_customers = '<?php echo $customers; ?>';
   };
 
   function fromLocalstorage(type) {
@@ -182,6 +184,8 @@
     var data = '';
     var result_html = '';
     var length = 0;
+    $('.uvdesk-dropdown').css('display', 'none');
+    input_value = $('#'+type).val();
     switch(type) {
       case 'filter-group':
         data = JSON.parse(localStorage.uvdesk_groups);
@@ -200,16 +204,31 @@
         break;
     }
     length = Object.keys(data).length;
-    if (length) {
+
+    var value_array = new Array();
+    for (var i = 0; i < length; i++) {
+      value_array[i] = data[i]['name'];
+    }
+
+    var search = input_value.toUpperCase();
+    var array = jQuery.grep(value_array, function(value) {
+        return value.toUpperCase().indexOf(search) >= 0;
+    });
+
+    new_length = Object.keys(array).length;
+
+    if (new_length) {
       result_html += '<div class="uvdesk-dropdown">';
       result_html += '  <ul>';
       for (var i = 0; i < length; i++) {
-        result_html += '  <li filter-id="' + data[i]['id'] + '">' + data[i]['name'] + '</li>';
+        for(var j = 0; j < new_length; j++) {
+          if(data[i]['name'] == array[j])
+            result_html += '  <li filter-id="' + data[i]['id'] + '">' + data[i]['name'] + '</li>';
+        }
       }
       result_html += '  </ul>';
       result_html += '</div>';
-    }
-    if (result_html == '') {
+    } else {
       result_html = '<div class="uvdesk-dropdown" style="display: block;"><span style="margin-left: 10px;">No Results</span></div>';
     }
     thisthis.after(result_html);
@@ -219,7 +238,7 @@
     var thisthis = $(this);
     var type = thisthis.attr('id');
 
-    if((type == 'filter-assigned' || type == 'filter-customer' || type == 'filter-tag')) { 
+    if((type == 'filter-assigned' || type == 'filter-customer' || type == 'filter-tag')) {
       if ((this.value).length < 2) {
         return;
       }
@@ -251,11 +270,15 @@
           var result_html = '';
           result_html += '<div class="uvdesk-dropdown">';
           result_html += '  <ul>';
-
+          var count=0;
           for (var i = 0; i < members.results.length; i++) {
             if (members.results[i]["title"].toLowerCase().search(value) != '-1') {
               result_html += '  <li filter-id="' + members.results[i]['id'] + '">' + members.results[i]['title'] + '</li>';
+              count++;
             }
+          }
+          if(!count) {
+            result_html += '  <li><span style="margin-left: 10px;">No Results</span></li>';
           }
           result_html += '  </ul>';
           result_html += '</div>';
@@ -298,6 +321,9 @@
             result_html += '  </ul>';
             result_html += '</div>';
             thisthis.after(result_html);
+          } else {
+            var result_html = '<div class="uvdesk-dropdown"><ul><li><span style="margin-left: 10px;">No Results</span></li></ul></div>';
+            thisthis.after(result_html);
           }
           thisthis.prev().css('display', 'none');
           inprocess = 0;
@@ -311,7 +337,7 @@
 
   var status = 1, page = 1, search = '', scrollDown = 0, group = 0, team = 0, priority = 0, type = 0, mailbox = 0, tag = 0, tab = 1, agent = 0, customer = 0;
 
-  function filteredData() {
+  function filteredData(refresh) {
     var data = {};
     data.page = page;
     data.search = search;
@@ -344,6 +370,133 @@
       data.customer = customer;
     }
 
+    if(refresh) {
+      var hash = window.location.hash.substring(1);
+      var hash = hash.split('/');
+      for (var j = 0; j < (hash.length-1); j++) {
+        if(hash[j] == 'agent') {
+          data.agent = hash[j+1];
+          var result_html = '';
+          var members = JSON.parse(localStorage.uvdesk_members); 
+          var selected_agent = (data.agent).split(',');
+          if (members.results) {
+            for (var i = 0; i < members.results.length; i++) {
+              if (jQuery.inArray(members.results[i]['id'].toString(),selected_agent) != -1) {
+                result_html += '<span class="label label-info">' + members.results[i]['title'] + ' <i class="fa fa-times remove" filter-id="' + members.results[i]['id'] + '"></i></span>&nbsp;';
+              }
+            }
+            $('#filter-assigned').parent().before(result_html);
+          }
+        }
+        if(hash[j] == 'customer') {
+          data.customer = hash[j+1];
+          var customers = JSON.parse(localStorage.uvdesk_customers);
+          var result_html = '';
+          var selected_customer = (data.customer).split(',');
+
+          if (customers) {
+            for (var i = 0; i < customers.length; i++) {
+              if (jQuery.inArray(customers[i]['id'].toString(),selected_customer) != -1) {
+                result_html += '<span class="label label-info">' + customers[i]['name'] + ' <i class="fa fa-times remove" filter-id="' + customers[i]['id'] + '"></i></span>&nbsp;';
+              }
+            }
+            $('#filter-customer').parent().before(result_html);
+          }
+        }
+        if(hash[j] == 'tag') {
+          data.tag = hash[j+1];
+          var tags = JSON.parse(localStorage.uvdesk_tags);
+          var result_html = '';
+          var selected_tag = (data.tag).split(',');
+
+          if (tags) {
+            for (var i = 0; i < tags.length; i++) {
+              if (jQuery.inArray(tags[i]['id'].toString(),selected_tag) != -1) {
+                result_html += '<span class="label label-info">' + tags[i]['name'] + ' <i class="fa fa-times remove" filter-id="' + tags[i]['id'] + '"></i></span>&nbsp;';
+              }
+            }
+            $('#filter-tag').parent().before(result_html);
+          }
+        }
+        if(hash[j] == 'tab') {
+          data.tab = hash[j+1];
+        }
+        if(hash[j] == 'mailbox') {
+          data.mailbox = hash[j+1];
+          var mailboxs = JSON.parse(localStorage.uvdesk_mailboxes);
+          var result_html = '';
+          var selected_mailbox = (data.mailbox).split(',');
+
+          if (mailboxs) {
+            for (var i = 0; i < mailboxs.length; i++) {
+              if (jQuery.inArray(mailboxs[i]['id'].toString(),selected_mailbox) != -1) {
+                result_html += '<span class="label label-info">' + mailboxs[i]['name'] + ' <i class="fa fa-times remove" filter-id="' + mailboxs[i]['id'] + '"></i></span>&nbsp;';
+              }
+            }
+            $('#filter-mailbox').parent().before(result_html);
+          }
+        }
+        if(hash[j] == 'type') {
+          var result_html = '';
+          data.type = hash[j+1];
+          var types = JSON.parse(localStorage.uvdesk_types);
+          var selected_type = (data.type).split(',');
+
+          if (types) {
+            for (var i = 0; i < types.length; i++) {
+              if (jQuery.inArray(types[i]['id'].toString(),selected_type) != -1) {
+                result_html += '<span class="label label-info">' + types[i]['name'] + ' <i class="fa fa-times remove" filter-id="' + types[i]['id'] + '"></i></span>&nbsp;';
+              }
+            }
+            $('#filter-type').parent().before(result_html);
+          }
+        }
+        if(hash[j] == 'priority') {
+          data.priority = hash[j+1];
+          var priorities = JSON.parse(localStorage.uvdesk_priorities);
+          var result_html = '';
+          var selected_priority = (data.priority).split(',');
+
+          if (priorities) {
+            for (var i = 0; i < priorities.length; i++) {
+              if (jQuery.inArray(priorities[i]['id'].toString(),selected_priority) != -1) {
+                result_html += '<span class="label label-info">' + priorities[i]['name'] + ' <i class="fa fa-times remove" filter-id="' + priorities[i]['id'] + '"></i></span>&nbsp;';
+              }
+            }
+            $('#filter-priority').parent().before(result_html);
+          }
+        }
+        if(hash[j] == 'team') {
+          data.team = hash[j+1];
+          var teams = JSON.parse(localStorage.uvdesk_teams);
+          var result_html = '';
+          var selected_team = (data.team).split(',');
+
+          if (teams) {
+            for (var i = 0; i < teams.length; i++) {
+              if (jQuery.inArray(teams[i]['id'].toString(),selected_team) != -1) {
+                result_html += '<span class="label label-info">' + teams[i]['name'] + ' <i class="fa fa-times remove" filter-id="' + teams[i]['id'] + '"></i></span>&nbsp;';
+              }
+            }
+            $('#filter-team').parent().before(result_html);
+          }
+        }
+        if(hash[j] == 'group') {
+          data.group = hash[j+1];
+          var result_html = '';
+          var groups = JSON.parse(localStorage.uvdesk_groups);
+          var selected_group = (data.group).split(',');
+          if (groups) {
+            for (var i = 0; i < groups.length; i++) {
+              if (jQuery.inArray(groups[i]['id'].toString(),selected_group) != -1) {
+                result_html += '<span class="label label-info">' + groups[i]['name'] + ' <i class="fa fa-times remove" filter-id="'+groups[i]['id']+'"></i></span>&nbsp';
+              }
+            }
+            $('#filter-group').parent().before(result_html);
+          }
+        }
+      }
+    }
     if (!inprocess) {
       $.ajax({
         url: 'index.php?route=uvdesk/uvdesk/filteredTickets&token=<?php echo $token; ?><?php echo $url; ?>',
@@ -372,11 +525,12 @@
     }
   };
 
-  filteredData();
+  var refresh = 1;
+  filteredData(refresh);
 
   $('#ticket-list').delegate('.pagination a', 'click', function(e) {
       e.preventDefault();
-      
+
       $('body .loader-div').css('display', 'block');
 
       $('#ticket-list').load(this.href);

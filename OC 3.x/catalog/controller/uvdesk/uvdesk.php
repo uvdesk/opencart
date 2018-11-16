@@ -322,6 +322,7 @@ class ControllerUvdeskUvdesk extends Controller {
 					'date_added' => $result->formatedCreatedAt,
 					'threads'    => $result->totalThreads,
 					'attachments' => $result->hasAttachments,
+					'status'	=> 	$result->status->name,
 					'agent'      => $result->agent ? $result->agent->name : '',
 					'view'       => $this->url->link('uvdesk/uvdesk/view', 'ticket_id=' . $result->incrementId . '', true)
 				);

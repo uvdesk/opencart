@@ -39,13 +39,13 @@
               </select>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-access-token"><span data-toggle="tooltip" title="<?php echo $help_access_token; ?>"><?php echo $entry_access_token; ?></label>
             <div class="col-sm-10">
               <input type="text" name="uvdesk_access_token" id="input-access-token" class="form-control" value="<?php echo $uvdesk_access_token; ?>" placeholder="<?php echo $entry_access_token; ?>">
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group required" >
             <label class="col-sm-2 control-label" for="input-company-domain"><span data-toggle="tooltip" title="<?php echo $help_company_domain; ?>"><?php echo $entry_company_domain; ?></label>
             <div class="col-sm-10">
               <div class="input-group">

@@ -39,7 +39,7 @@ class ControllerUvdeskUvdesk extends Controller {
 			if (isset($customer->customers[0])) {
 				$data['isTicketCustomer'] = true;
 
-				$this->session->data['uvdesk_customer_id'] = $customer->customers[0]->id;		
+				$this->session->data['uvdesk_customer_id'] = $customer->customers[0]->id;
 			} else {
 				$data['isTicketCustomer'] = false;
 			}
@@ -47,14 +47,14 @@ class ControllerUvdeskUvdesk extends Controller {
 
 		$data['ticket_url'] = $this->url->link('uvdesk/uvdesk/view', '', true);
 		$data['create_ticket'] = $this->url->link('uvdesk/uvdesk/create', '', true);
-		
+
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
 		$data['content_top'] = $this->load->controller('common/content_top');
 		$data['content_bottom'] = $this->load->controller('common/content_bottom');
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
-		
+
 		$this->response->setOutput($this->load->view('uvdesk/uvdesk_list', $data));
 	}
 
@@ -74,12 +74,12 @@ class ControllerUvdeskUvdesk extends Controller {
 				$data['email'] = $this->customer->getEmail();
 			}
 			$ticket = $this->model_uvdesk_uvdesk->createTicket($data);
-			
+
 			$this->session->data['success'] = $ticket->message;
 			if ($this->customer->getId()) {
-				$this->response->redirect($this->url->link('uvdesk/uvdesk/view', 'id=' . $ticket->id, true));	
+				$this->response->redirect($this->url->link('uvdesk/uvdesk/view', 'id=' . $ticket->id, true));
 			} else {
-				$this->response->redirect($this->url->link('account/login', '', true));				
+				$this->response->redirect($this->url->link('account/login', '', true));
 			}
 		}
 
@@ -161,14 +161,14 @@ class ControllerUvdeskUvdesk extends Controller {
 
 		$data['action'] = $this->url->link('uvdesk/uvdesk/create', '', true);
 		// $data['ticket_url'] = $this->url->link('uvdesk/uvdesk/view', '', true);
-		
+
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
 		$data['content_top'] = $this->load->controller('common/content_top');
 		$data['content_bottom'] = $this->load->controller('common/content_bottom');
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
-		
+
 		$this->response->setOutput($this->load->view('uvdesk/uvdesk_form', $data));
 	}
 
@@ -239,14 +239,14 @@ class ControllerUvdeskUvdesk extends Controller {
 
 		$data['add_reply'] = $this->url->link('uvdesk/uvdesk/addReply', '', true);
 		$data['attachment_url'] = $this->url->link('uvdesk/uvdesk/download', 'attachment=', true);
-		
+
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
 		$data['content_top'] = $this->load->controller('common/content_top');
 		$data['content_bottom'] = $this->load->controller('common/content_bottom');
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
-		
+
 		$this->response->setOutput($this->load->view('uvdesk/uvdesk', $data));
 	}
 
@@ -296,7 +296,7 @@ class ControllerUvdeskUvdesk extends Controller {
 				'search' => $search,
 				'customer_id' => $this->session->data['uvdesk_customer_id']
 			);
-			
+
 			$tickets = $this->model_uvdesk_uvdesk->getTickets($filter_data);
 
 			$json['current_page'] = $tickets->pagination->current;
@@ -322,6 +322,7 @@ class ControllerUvdeskUvdesk extends Controller {
 					'date_added' => $result->formatedCreatedAt,
 					'threads'    => $result->totalThreads,
 					'attachments' => $result->hasAttachments,
+					'status'	=> 	$result->status->name,
 					'agent'      => $result->agent ? $result->agent->name : '',
 					'view'       => $this->url->link('uvdesk/uvdesk/view', 'ticket_id=' . $result->incrementId . '', true)
 				);
@@ -380,7 +381,7 @@ class ControllerUvdeskUvdesk extends Controller {
 		if (!$this->config->get('uvdesk_status')) {
 			$this->response->redirect($this->url->link('account/account', '', true));
 		}
-		
+
 		if (isset($this->request->get['attachment']) && $this->request->get['attachment']) {
 			$attachment_id = $this->request->get['attachment'];
 			$company_domain = $this->config->get('uvdesk_company_domain');
@@ -445,20 +446,24 @@ class ControllerUvdeskUvdesk extends Controller {
 		}
 
 		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));		
+		$this->response->setOutput(json_encode($json));
 	}
 
 	public function addReply()	{
 		$this->load->model('uvdesk/uvdesk');
 
-		if (isset($this->request->post['reply']) && $this->request->post['reply']) {
-			$ticket_id = $this->request->post['ticket_id'];
-			$reply = $this->model_uvdesk_uvdesk->addThread($ticket_id, html_entity_decode($this->request->post['reply']));
-			
-			if (isset($reply->message)) {
-				$this->session->data['success'] = $reply->message;
+		if (isset($this->request->post['reply']) && isset($this->request->post['id'])) {
+			if ($this->request->post['reply']) {
+				$ticket_id = $this->request->post['ticket_id'];
+				$reply = $this->model_uvdesk_uvdesk->addThread($ticket_id, html_entity_decode($this->request->post['reply']));
+
+				if (isset($reply->message)) {
+					$this->session->data['success'] = $reply->message;
+				} else {
+					$this->session->data['warning'] = 'There is some issue while adding reply';
+				}
 			} else {
-				$this->session->data['warning'] = 'There is some issue while adding reply';
+				$this->session->data['warning'] = 'You haven\'t provided any text in the reply box';
 			}
 			$this->response->redirect($this->url->link('uvdesk/uvdesk/view', 'id=' . $this->request->post['id'], true));
 		}

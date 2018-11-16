@@ -73,6 +73,13 @@ class ControllerExtensionModuleUvdesk extends Controller {
 		if (!$this->user->hasPermission('modify', 'extension/module/uvdesk')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
+		
+		if (utf8_strlen(trim($this->request->post['uvdesk_access_token'])) < 3 ) {
+			$this->error['warning'] = $this->language->get('error_warning');
+		}
+		if (!$this->request->post['uvdesk_company_domain']) {
+			$this->error['warning'] = $this->language->get('error_warning');
+		}
 
 		return !$this->error;
 	}

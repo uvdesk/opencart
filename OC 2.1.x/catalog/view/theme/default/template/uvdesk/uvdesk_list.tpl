@@ -37,6 +37,9 @@
                 <ul class="dropdown-menu dropdown-menu-left uvsort">
                   <li><a sort="t.id" class="uvfocus"><?php echo $sort_ticket_id; ?> <i class="fa fa-chevron-down sortChevron"></i></a></li>
                   <li><a sort="agentName"><?php echo $sort_agent_name; ?></a></li>
+                  <li><a sort="t.updatedAt"><?php echo $sort_last_replied; ?></a></li>
+                  <li><a sort="c.email"><?php echo $sort_customer_email; ?></a></li>
+                  <li><a sort="name"><?php echo $sort_customer_name; ?></a></li>
                 </ul>
               </div>
             </div>
@@ -68,6 +71,7 @@
                   <td class="text-center"><?php echo $column_ticket_no; ?></td>
                   <td class="text-center"><?php echo $column_subject; ?></td>
                   <td class="text-center"><?php echo $column_date_added; ?></td>
+                  <td class="text-center"><?php echo $column_status; ?></td>
                   <td class="text-center"><?php echo $column_replies; ?></td>
                   <td class="text-center"><?php echo $column_agent; ?></td>
                 </tr>
@@ -113,6 +117,7 @@
             tickets += '  <td class="text-center"><a href="<?php echo $ticket_url; ?>&id=' + jsonTickets[i]["ticket_id"] + '">#' + jsonTickets[i]['ticket_id'] + '</a></td>';
             tickets += '  <td class="text-center"><a href="<?php echo $ticket_url; ?>&id=' + jsonTickets[i]["ticket_id"] + '"><i class="' + (jsonTickets[i]['attachments'] ? "fa fa-paperclip" : '') + '"></i> ' + jsonTickets[i]['subject'] + '</a></td>';
             tickets += '  <td class="text-center"><a href="<?php echo $ticket_url; ?>&id=' + jsonTickets[i]["ticket_id"] + '">' + jsonTickets[i]['date_added'] + '</a></td>';
+            tickets += '  <td class="text-center"><a href="<?php echo $ticket_url; ?>&id=' + jsonTickets[i]["ticket_id"] + '">' + jsonTickets[i]['status'] + '</a></td>';
             tickets += '  <td class="text-center"><a href="<?php echo $ticket_url; ?>&id=' + jsonTickets[i]["ticket_id"] + '"><span class="label label-info">' + jsonTickets[i]['threads'] + '</span></a></td>';
             tickets += '  <td class="text-center"><a href="<?php echo $ticket_url; ?>&id=' + jsonTickets[i]["ticket_id"] + '">';
             if(jsonTickets[i]['agent']) {
@@ -224,4 +229,4 @@
     }
   });
 </script>
-<?php echo $footer; ?> 
+<?php echo $footer; ?>

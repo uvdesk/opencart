@@ -42,11 +42,14 @@ $_['column_subject']     = 'Subject';
 $_['column_date_added']  = 'Date Added';
 $_['column_replies']     = 'Replies';
 $_['column_agent']       = 'Agent';
+$_['column_status']       = 'Status';
 
 // Sort
 $_['sort_agent_name']  = 'Agent Name';
 $_['sort_ticket_id']   = 'Ticket Id';
-
+$_['sort_last_replied']   = 'Last Replied';
+$_['sort_customer_email']   = 'Customer Email';
+$_['sort_customer_name']   = 'Customer Name';
 // Filter
 $_['filter_open']     = 'Open';
 $_['filter_pending']  = 'Pending';

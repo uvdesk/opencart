@@ -70,6 +70,12 @@
           <?php if (isset($ticket->ticket->type->id)) { ?>
           <span class="label label-info" title="Type" data-toggle="tooltip"><?php echo $ticket->ticket->type->name; ?></span>
           <?php } ?>
+          <?php if (isset($ticket->ticket->subgroup->id)) { ?>
+            <span class="label label-info" title="Team" data-toggle="tooltip"><?php echo $ticket->ticket->subgroup->name; ?></span>
+          <?php } ?>
+          <?php if (isset($ticket->ticket->group->id)) { ?>
+            <span class="label label-info" title="Group" data-toggle="tooltip"><?php echo $ticket->ticket->group->name; ?></span>
+          <?php } ?>    
           <span class="label label-info" title="Threads" data-toggle="tooltip"><?php echo $ticket->ticketTotalThreads; ?></span>
           <span class="label label-success" title="Agent" data-toggle="tooltip"><i class="fa fa-user"></i></span>
           <span>

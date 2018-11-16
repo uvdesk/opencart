@@ -149,6 +149,7 @@ class ModelUvdeskUvdesk extends Model {
 		}
 
 		$data .= "--" . $mime_boundary . "--" . $lineEnd . $lineEnd;
+		$data  .= $this->config->get('config_admin_language');
 
 		$response = $this->postApi($url, $data, 'POST', $mime_boundary);
 		return $response;

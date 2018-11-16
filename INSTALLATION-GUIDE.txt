@@ -1,0 +1,31 @@
+##############################################################################
+##                                                                          ##
+##          INSTALLATION INFORMATION(STEP) FOR OPENCART MODULE              ##
+##                           (Version 2.0.0.0)                              ##
+##                                                                          ##
+##                                                                          ##
+##                                                                          ##
+##############################################################################
+
+Manual Installation:
+
+1) Unzip the main module directory.
+
+2) Select preferred version of UVdesk module according to your Opencart version.
+    - OpenCart_2.0.x.x folder for Opencart Version 2.0.x.x
+    - OpenCart_2.1.x.x folder for Opencart Version 2.1.x.x    
+    - OpenCart_2.2.x.x folder for Opencart Version 2.2.x.x
+    - OpenCart_2.3.x.x folder for Opencart Version 2.3.x.x
+    - OpenCart_3.x.x.x folder for Opencart Version 3.x.x.x
+
+3) Upload both admin and catalog directories into your Opencart's root directory.
+
+4) After uploading directories, go to your browser and run Opencart and login to admin side.
+
+Go to Extensions->Extension Installer upload that uvdesk.ocmod.xml which are present under the OCMOD folder.
+
+6) After uploading XML file go to Admin->Extensions->Modification and refresh the content by clicking the upper right button.
+
+7) Go to Users->User Groups and edit desired group(specially admin) and then give access and modify permission to all the uploaded files.
+
+8) Now install module by heading towards Admin->Extension->Modules (Admin->Extension->Extensions->Modules for Opencart 2.3.x.x and upper).

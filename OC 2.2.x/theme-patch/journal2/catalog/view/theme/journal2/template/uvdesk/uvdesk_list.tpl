@@ -59,6 +59,7 @@
                   <td class="text-center"><?php echo $column_ticket_no; ?></td>
                   <td class="text-center"><?php echo $column_subject; ?></td>
                   <td class="text-center"><?php echo $column_date_added; ?></td>
+                  <td class="text-center"><?php echo $column_status; ?></td>                  
                   <td class="text-center"><?php echo $column_replies; ?></td>
                   <td class="text-center"><?php echo $column_agent; ?></td>
                 </tr>
@@ -104,6 +105,7 @@
             tickets += '  <td class="text-center"><a href="<?php echo $ticket_url; ?>&id=' + jsonTickets[i]["ticket_id"] + '">#' + jsonTickets[i]['ticket_id'] + '</a></td>';
             tickets += '  <td class="text-center"><a href="<?php echo $ticket_url; ?>&id=' + jsonTickets[i]["ticket_id"] + '"><i class="' + (jsonTickets[i]['attachments'] ? "fa fa-paperclip" : '') + '"></i> ' + jsonTickets[i]['subject'] + '</a></td>';
             tickets += '  <td class="text-center"><a href="<?php echo $ticket_url; ?>&id=' + jsonTickets[i]["ticket_id"] + '">' + jsonTickets[i]['date_added'] + '</a></td>';
+            tickets += '  <td class="text-center"><a href="<?php echo $ticket_url; ?>&id=' + jsonTickets[i]["ticket_id"] + '">' + jsonTickets[i]['status'] + '</a></td>';
             tickets += '  <td class="text-center"><a href="<?php echo $ticket_url; ?>&id=' + jsonTickets[i]["ticket_id"] + '"><span class="label label-info">' + jsonTickets[i]['threads'] + '</span></a></td>';
             tickets += '  <td class="text-center"><a href="<?php echo $ticket_url; ?>&id=' + jsonTickets[i]["ticket_id"] + '">';
             if(jsonTickets[i]['agent']) {
@@ -215,4 +217,4 @@
     }
   });
 </script>
-<?php echo $footer; ?> 
+<?php echo $footer; ?>
