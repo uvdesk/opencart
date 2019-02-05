@@ -20,7 +20,7 @@ class ModelUvdeskUvdesk extends Model {
 		}
 
 		if (isset($data['search']) && $data['search']) {
-			$url .= '&search='. $data['search'];
+			$url .= '&search='. urlencode($data['search']);
 		}
 
 		if (isset($data['customer']) && $data['customer']) {
