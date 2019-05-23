@@ -101,7 +101,7 @@ class ControllerUvdeskUvdesk extends Controller {
 			$url .= '&tab=' . $this->request->get['tab'];
 		}
 
-		$data['url'] = $url;
+		$data['url'] = str_replace('\'' , '',$url);
 
 		$data['label_active'] = $label;
 		$data['label_url'] = $this->url->link('uvdesk/uvdesk', 'token=' . $this->session->data['token'] . '&label=', true);
@@ -383,7 +383,7 @@ class ControllerUvdeskUvdesk extends Controller {
 		if (isset($this->request->get['id']) && $this->request->get['id']) {
 			$data['id'] = $ticket_id = $this->request->get['id'];
 			$data['ticket'] = $ticket = $this->model_uvdesk_uvdesk->getTicket($ticket_id);
-			if (isset($ticket->error) || !$ticket) {
+			if ((is_array($ticket) && isset($ticket['error'])) || isset($ticket->error) || !$ticket) {
 				if (isset($ticket->error_description)) {
 					$data['error'] = $ticket->error_description;
 				} elseif (isset($ticket->description)) {
