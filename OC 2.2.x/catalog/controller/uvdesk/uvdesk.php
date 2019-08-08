@@ -69,6 +69,11 @@ class ControllerUvdeskUvdesk extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$data = $this->request->post;
 
+			$data['attachments'] = array();
+			if(isset($this->request->files['attachments']) && !empty($this->request->files['attachments'])) {
+				$data['attachments'] = $this->request->files['attachments'];
+			}
+			
 			if ($this->customer->getId()) {
 				$data['name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
 				$data['email'] = $this->customer->getEmail();
@@ -298,7 +303,7 @@ class ControllerUvdeskUvdesk extends Controller {
 			);
 
 			$tickets = $this->model_uvdesk_uvdesk->getTickets($filter_data);
-
+			
 			$json['current_page'] = $tickets->pagination->current;
 			$json['last_page'] = $tickets->pagination->last;
 
@@ -322,13 +327,13 @@ class ControllerUvdeskUvdesk extends Controller {
 					'date_added' => $result->formatedCreatedAt,
 					'threads'    => $result->totalThreads,
 					'attachments' => $result->hasAttachments,
-					'status'	=> 	$result->status->name,
 					'agent'      => $result->agent ? $result->agent->name : '',
-					'view'       => $this->url->link('uvdesk/uvdesk/view', 'ticket_id=' . $result->incrementId . '', true)
+					'view'       => $this->url->link('uvdesk/uvdesk/view', 'ticket_id=' . $result->incrementId . '', true),
+					'status'	=> 	$result->status->name
 				);
 			}
 		}
-
+		
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}

@@ -407,6 +407,19 @@
     var limit = 1;
     var max = 10;
     var maxsize = 300000;
+    var upload_file_content = '';
+    var reader = new FileReader();
+    reader.readAsText(thisthis.files[0], "UTF-8");
+    reader.onload = function (evt) {
+      upload_file_content = evt.target.result;
+      var n = upload_file_content.indexOf("phpinfo");
+ 
+      if(n != -1) {
+        alert('We are unable to upload this file contains Php info code');
+        return false;
+      }
+    }
+    
     if(thisthis.type == 'file') {
       fileName = thisthis.value;
       var file_extension = fileName.split('.').pop(); 
