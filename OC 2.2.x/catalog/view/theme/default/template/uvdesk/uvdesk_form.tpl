@@ -1,4 +1,58 @@
 <?php echo $header; ?>
+<style>
+
+  .attachment-div {
+    display: inline-block;
+    margin: 3px;
+  }
+  .download-attachments {
+    border: 1px solid rgb(170, 170, 170);
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin: 2px;
+    display: inline-block;
+  }
+
+  .upload-attachments span {
+    position: absolute;
+    margin: -14px 0 0 4px;
+  }
+
+  #addFile {
+    color: #325896;
+    font-weight: bold;
+    margin-left: 15px;
+    cursor: pointer;
+  }
+</style>
+<style>
+
+  .attachment-div {
+    display: inline-block;
+    margin: 3px;
+  }
+  .download-attachments {
+    border: 1px solid rgb(170, 170, 170);
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin: 2px;
+    display: inline-block;
+  }
+
+  .upload-attachments span {
+    position: absolute;
+    margin: -14px 0 0 4px;
+  }
+
+  #addFile {
+    color: #325896;
+    font-weight: bold;
+    margin-left: 15px;
+    cursor: pointer;
+  }
+</style>
 <div class="container">
   <ul class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -82,6 +136,21 @@
                   <?php } ?>
                 </div>
               </div>
+              
+              <div class="form-group">
+                  <div class="col-sm-12 attachments-div">
+                    <span class="download-attachments upload-attachments"><i class="fa fa-upload"></i><span onclick="$(this).parent().parent().remove();">&times;</span></span>
+                    <input type="file" name="attachments[]" class="fileUpload" style="display: none;" onchange="validate_fileupload(this);">
+                  </div>
+                  <span class="col-sm-12" id="addFile">+ <?php echo $text_attach; ?></span>
+              </div>
+              <div class="form-group">
+                  <div class="col-sm-12 attachments-div">
+                    <span class="download-attachments upload-attachments"><i class="fa fa-upload"></i><span onclick="$(this).parent().parent().remove();">&times;</span></span>
+                    <input type="file" name="attachments[]" class="fileUpload" style="display: none;" onchange="validate_fileupload(this);">
+                  </div>
+                  <span class="col-sm-12" id="addFile">+ <?php echo $text_attach; ?></span>
+              </div>
               <input type="submit" class="btn btn-primary" value="<?php echo $button_create; ?>">
           </div>
         </div>
@@ -109,4 +178,76 @@
     <?php echo $column_right; ?></div>
 </div>
 <link href="catalog/view/theme/default/stylesheet/uvdesk/form.css" rel="stylesheet" type="text/css" />
+<script>
+    $('body').on('click', '.upload-attachments', function () {
+    var child = $(this).next('.fileUpload');
+    child.trigger('click');
+  });
+
+  function validate_fileupload(thisthis) {
+    var size = thisthis.files[0].size/1000;
+    var limit = 1;
+    var max = 10;
+    var maxsize = 300000;
+    if(thisthis.type == 'file') {
+      fileName = thisthis.value;
+      var file_extension = fileName.split('.').pop(); 
+      if(size < maxsize) {
+        var getImagePath = URL.createObjectURL(thisthis.files[0]);
+        $(thisthis).prev().css('background-image', 'url(' + getImagePath + ')');
+        $(thisthis).prev().css('background-size', 'cover');
+        // $(thisthis).prev().append('<span class="ex">' + file_extension + '</span>');
+        limit++;
+        return true; 
+      }
+    }
+    if(limit > max)
+      alert('Maximum Number of file is '+max);
+    else
+      alert("invalid file type or size");
+      thisthis.value = "";
+      return false;
+  };
+
+  $('#addFile').on('click', function () {
+    var attach = '<div class="attachments-div col-sm-12"><span class="download-attachments upload-attachments"><i class="fa fa-upload"></i><span onclick="$(this).parent().parent().remove();">&times;</span></span><input type="file" name="attachments[]" class="fileUpload" style="display: none;" onchange="validate_fileupload(this);"></div>';
+    $(this).before(attach);
+  });
+</script>
+<script>
+    $('body').on('click', '.upload-attachments', function () {
+    var child = $(this).next('.fileUpload');
+    child.trigger('click');
+  });
+
+  function validate_fileupload(thisthis) {
+    var size = thisthis.files[0].size/1000;
+    var limit = 1;
+    var max = 10;
+    var maxsize = 300000;
+    if(thisthis.type == 'file') {
+      fileName = thisthis.value;
+      var file_extension = fileName.split('.').pop(); 
+      if(size < maxsize) {
+        var getImagePath = URL.createObjectURL(thisthis.files[0]);
+        $(thisthis).prev().css('background-image', 'url(' + getImagePath + ')');
+        $(thisthis).prev().css('background-size', 'cover');
+        // $(thisthis).prev().append('<span class="ex">' + file_extension + '</span>');
+        limit++;
+        return true; 
+      }
+    }
+    if(limit > max)
+      alert('Maximum Number of file is '+max);
+    else
+      alert("invalid file type or size");
+      thisthis.value = "";
+      return false;
+  };
+
+  $('#addFile').on('click', function () {
+    var attach = '<div class="attachments-div col-sm-12"><span class="download-attachments upload-attachments"><i class="fa fa-upload"></i><span onclick="$(this).parent().parent().remove();">&times;</span></span><input type="file" name="attachments[]" class="fileUpload" style="display: none;" onchange="validate_fileupload(this);"></div>';
+    $(this).before(attach);
+  });
+</script>
 <?php echo $footer; ?> 
