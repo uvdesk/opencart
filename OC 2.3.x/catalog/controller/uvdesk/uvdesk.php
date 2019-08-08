@@ -69,6 +69,11 @@ class ControllerUvdeskUvdesk extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$data = $this->request->post;
 
+			$data['attachments'] = array();
+			if(isset($this->request->files['attachments']) && !empty($this->request->files['attachments'])) {
+				$data['attachments'] = $this->request->files['attachments'];
+			}
+			
 			if ($this->customer->getId()) {
 				$data['name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
 				$data['email'] = $this->customer->getEmail();

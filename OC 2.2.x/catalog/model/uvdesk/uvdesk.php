@@ -181,18 +181,19 @@ class ModelUvdeskUvdesk extends Model {
 		$domain = ($this->request->server['HTTP_HOST'].(str_replace("/index.php","/", $this->request->server['PHP_SELF'])));
 		$url = 'tickets.json';
 
+		if(isset($data['attachments']) && !empty($data['attachments']))
+		$mime_boundary = md5(time());
+
 		$data = array(
 			'name'    => $data['name'],
 			'from'    => $data['email'],
 			'subject' => $data['subject'],
 			'reply'   => $data['message'],
 			'type'    => $data['type'],
-			'locale'  => $this->session->data['language'],
-			'domain'	=> $domain,
-			'token'   => $this->config->get('uvdesk_access_token'),
+			'attachments' => $data['attachments']
 			);
 
-		$ticket = $this->postApi($url, $data, 'POST');
+		$ticket = $this->postApi($url, $data, 'POST', $mime_boundary);
 		return $ticket;
 	}
 
@@ -220,6 +221,47 @@ class ModelUvdeskUvdesk extends Model {
 				'Content-type: application/json'
 			);
 		}
+
+		// attachements
+
+		if(isset($data['attachments']) && !empty($data['attachments'])) {
+			$values = $data;
+			$data = '';
+
+			$lineEnd = "\r\n";
+			$mime_boundary = md5(time());
+
+			foreach ($values as $key => $value) {
+
+				if(!is_array($value)) {
+					$data .= '--' . $mime_boundary . $lineEnd;
+					$data .= 'Content-Disposition: form-data; name="'.$key.'"' . $lineEnd . $lineEnd;
+					$data .= $value . $lineEnd;	
+				} else {
+
+					$data .= '--' . $mime_boundary . $lineEnd;
+
+					if ($key == 'attachments' && !empty($value) && is_array($value)) {
+						foreach ($value['name'] as $value_key => $value_file) {
+
+							if ($value_file) {
+								$fileType = $value['type'][$value_key];
+								$fileName = $value['name'][$value_key];
+								$fileTmpName = $value['tmp_name'][$value_key];
+		
+								$data .= 'Content-Disposition: form-data; name="attachments[]"; filename="' . $fileName . '"' . $lineEnd;
+								$data .= "Content-Type: $fileType" . $lineEnd . $lineEnd;
+								$data .= file_get_contents($fileTmpName) . $lineEnd;
+								$data .= '--' . $mime_boundary . $lineEnd;
+							}
+						}
+					}
+		
+					$data .= "--" . $mime_boundary . "--" . $lineEnd . $lineEnd;
+				}
+			}
+		}
+		// attachements
 
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
